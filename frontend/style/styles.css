@@ -1,0 +1,186 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Outfit', sans-serif;
+}
+body {
+  height: 100vh;
+  background: radial-gradient(circle at top left, #1f0037, #000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Background Blobs */
+.page-bg {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -1;
+  background: #1f0037;
+}
+.page-bg .blob {
+  position: absolute;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  opacity: 0.75;
+  animation: blobFloat 10s ease-in-out infinite;
+}
+.page-bg .blob--one {
+  width: 500px; height: 500px;
+  top: -100px; left: -100px;
+  background: radial-gradient(circle at 30% 30%, rgba(255,50,200,0.6), transparent 70%);
+}
+.page-bg .blob--two {
+  width: 600px; height: 600px;
+  bottom: -150px; right: -150px;
+  background: radial-gradient(circle at 70% 70%, rgba(50,200,255,0.6), transparent 70%);
+  animation-duration: 12s;
+  animation-delay: 2s;
+}
+.page-bg .blob--three {
+  width: 400px; height: 400px;
+  top: 20%; right: 10%;
+  background: radial-gradient(circle at 50% 50%, rgba(200,255,50,0.5), transparent 70%);
+  animation-duration: 8s;
+  animation-delay: 4s;
+}
+@keyframes blobFloat {
+  0% { transform: translate(0,0) scale(1); }
+  33% { transform: translate(20vw, -10vh) scale(1.2); }
+  66% { transform: translate(-15vw, 15vh) scale(0.8); }
+  100% { transform: translate(0,0) scale(1); }
+}
+
+/* Container */
+.container {
+  width: 90%;
+  max-width: 1100px;
+  min-height: 60vh;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: floatIn 1s ease forwards;
+}
+@keyframes floatIn {
+  0% { transform: translateY(100px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+/* Left Panel */
+.left-panel {
+  flex: 1;
+  /* background: linear-gradient(145deg, #4b006e, #1f0037); */
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px;
+  text-align: center;
+  overflow: hidden;
+}
+.left-panel h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+.left-panel p {
+  font-size: 1rem;
+  opacity: 0.8;
+  line-height: 1.4;
+}
+
+/* Glass Panel Inside Left Panel */
+.panel {
+  max-width: 700px;
+  padding: 60px 40px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  animation: fadeInUp 1s ease-out forwards;
+  opacity: 0;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.panel p {
+  font-size: 1.1rem;
+  color: white;
+  line-height: 1.5;
+}
+
+/* Right Panel */
+.right-panel {
+  flex: 1;
+  background: white;
+  padding: 70px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+.right-panel h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  font-weight: 700;
+  color: #2e004f;
+}
+.right-panel input,
+.right-panel select {
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  width: 100%;
+  font-size: 1rem;
+}
+.right-panel button {
+  background: #4b006e;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 10px;
+  transition: background 0.3s;
+}
+.right-panel button:hover {
+  background: #6900aa;
+}
+.right-panel .bottom-text {
+  margin-top: 20px;
+  font-size: 1rem;
+  text-align: center;
+}
+.right-panel .bottom-text a {
+  color: #4b006e;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: column;
+  }
+  .left-panel {
+    border-radius: 20px 20px 0 0;
+  }
+  .right-panel {
+    border-radius: 0 0 20px 20px;
+  }
+} 

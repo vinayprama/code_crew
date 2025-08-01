@@ -1,0 +1,54 @@
+ document.getElementById('chatForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const msg = document.getElementById('userInput').value.trim();
+      if (!msg) return;
+      const chatWindow = document.getElementById('chatWindow');
+
+      // user bubble
+      const userDiv = document.createElement('div');
+      userDiv.textContent = msg;
+      userDiv.className = 'text-right mb-2 text-gray-900 dark:text-white';
+      chatWindow.appendChild(userDiv);
+
+      // skeleton loader
+      const skeleton = document.createElement('div');
+      skeleton.className = 'h-4 w-3/4 mb-2 rounded bg-gray-300 dark:bg-gray-700 animate-pulse shimmer';
+      chatWindow.appendChild(skeleton);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+
+      document.getElementById('userInput').value = '';
+      document.getElementById('userInput').focus();
+
+      try {
+        const res = await fetch("http://localhost:8001/chat/query", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+          },
+          body: JSON.stringify({ project_name: currentProjectName, query: msg })
+        });
+        const data = await res.json();
+
+        // remove skeleton & show bot reply with typing animation
+        chatWindow.removeChild(skeleton);
+        const botDiv = document.createElement('div');
+        botDiv.className = 'text-left mb-2 text-gray-700 dark:text-gray-300';
+        chatWindow.appendChild(botDiv);
+
+        let i = 0;
+        const answer = data.answer || '[No response from AI]';
+        const typer = setInterval(() => {
+          botDiv.textContent = answer.slice(0, ++i);
+          chatWindow.scrollTop = chatWindow.scrollHeight;
+          if (i === answer.length) clearInterval(typer);
+        }, 30);
+
+      } catch (err) {
+        chatWindow.removeChild(skeleton);
+        const errDiv = document.createElement('div');
+        errDiv.textContent = '⚠️ Error: ' + err.message;
+        errDiv.className = 'text-left mb-2 text-red-500';
+        chatWindow.appendChild(errDiv);
+      }
+    });

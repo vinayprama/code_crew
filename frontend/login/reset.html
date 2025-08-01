@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prama.ai Reset Password</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/frontend/style/styles.css">
+</head>
+<body>
+  <!-- Blurred floating background -->
+  <div class="page-bg">
+    <div class="blob blob--one"></div>
+    <div class="blob blob--two"></div>
+    <div class="blob blob--three"></div>
+  </div>
+
+  <!-- Main content -->
+  <div class="container">
+    <div class="left-panel">
+      <div class="panel">
+        <h1>Reset Your Password</h1>
+        <p>Forgot your password? No worries!<br>
+        Just enter your email, answer your security question,<br>
+        and set a new password to get back in.</p>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <h2>Password Reset</h2>
+      <form id="resetForm">
+        <input type="email" id="email" placeholder="Your Registered Email" required />
+        
+        <select id="security_question" required>
+          <option value="" disabled selected>Choose Your Security Question</option>
+          <option value="first_school">What was your first school name?</option>
+          <option value="birth_city">In which city were you born?</option>
+          <option value="pet_name">What is your pet’s name?</option>
+        </select>
+        
+        <input type="text" id="security_answer" placeholder="Your Security Answer" required />
+        <input type="password" id="new_password" placeholder="New Password" required />
+        <input type="password" id="confirm_password" placeholder="Confirm New Password" required />
+        
+        <button type="submit">Reset Password</button>
+      </form>
+
+      <div class="bottom-text">
+        Remembered? <a href="auth.html">Sign In</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS file that contains resetPassword() -->
+  <script src="style/js.js"></script>
+
+  <script>
+    document.getElementById("resetForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const security_question = document.getElementById("security_question").value;
+      const security_answer = document.getElementById("security_answer").value;
+      const new_password = document.getElementById("new_password").value;
+      const confirm_password = document.getElementById("confirm_password").value;
+
+      if (new_password !== confirm_password) {
+        alert("Passwords do not match!");
+        return;
+      }
+
+      try {
+        await resetPassword({
+          email,
+          security_question,
+          security_answer,
+          new_password
+        });
+        alert("Password reset successful! You can now log in.");
+        window.location.href = "auth.html";
+      } catch (err) {
+        alert("Reset failed: " + err.message);
+      }
+    });
+  </script>
+</body>
+</html>
