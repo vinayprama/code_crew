@@ -15,6 +15,8 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import PointStruct, VectorParams, Distance
 import uuid
 from cryptography.fernet import Fernet
+from dotenv import load_dotenv
+load_dotenv()  
 
 SUPABASE_URL = os.getenv('SUPABASE_URL')
 SUPABASE_KEY = os.getenv('SUPABASE_KEY')

@@ -1,13 +1,12 @@
-# fastapi
-# uvicorn
-# python-jose
-# passlib[bcrypt]
-# python-dotenv
-# httpx
-# pdfplumber python-docx
-# Office365-REST-Python-Client
-# pip install --upgrade qdrant-client
-
-# pip install sentence-transformers
-# pip install pip==23.3.1
-
+fastapi
+uvicorn
+python-jose
+passlib[bcrypt]
+python-dotenv
+httpx
+pdfplumber
+python-docx
+Office365-REST-Python-Client
+qdrant-client
+sentence-transformers
+pip==23.3.1

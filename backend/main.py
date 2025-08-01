@@ -1,15 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from auth.routes import router as auth_router
 from routes import projects  
 from routes.chat import router as chat_router
 from routes.meetings import router as meetings_router
+from routes.upload_doc import router as upload_doc_router  # ✅ Add this line
 from dotenv import load_dotenv
 import os
+
 load_dotenv()
-
-
-
 
 app = FastAPI()
 
@@ -21,16 +19,20 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],  # or set frontend origin
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app.include_router(auth_router)
+# Register routers
+# app.include_router(auth_router)
 app.include_router(projects.router)
 app.include_router(chat_router)
 app.include_router(meetings_router)
+app.include_router(upload_doc_router)  # ✅ Important
+
+# Load S3 config from .env
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_REGION = os.getenv("AWS_REGION")

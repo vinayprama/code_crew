@@ -1,0 +1,20 @@
+# === Python-related ===
+*.py[cod]
+__pycache__/
+backend/venv/
+
+# === Environment files ===
+backend/.env
+
+# === Node/Frontend (optional) ===
+node_modules/
+dist/
+build/
+
+# === System files ===
+.DS_Store
+Thumbs.db
+
+# === VSCode/Editor settings ===
+.vscode/
+*.swp
