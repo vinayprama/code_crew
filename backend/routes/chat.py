@@ -130,21 +130,13 @@ async def chat_voice_endpoint(data: ChatQuery):
 
 from datetime import datetime
 
-async def save_to_supabase(project_name: str, query: str, response: str):
+async def save_to_supabase(project_name: str, query: str, answer: str):
+    payload = {
+        "project_name": project_name,
+        "query": query,
+        "response": answer
+    }
     try:
-        payload = {
-            "project_name": project_name,
-            "query": query,
-            "response": response,
-            "created_at": datetime.utcnow().isoformat()
-        }
-
-        result = supabase.table("chats").insert(payload).execute()
-
-        if result.status_code in [200, 201]:
-            print("✅ Chat log saved successfully.")
-        else:
-            print("⚠️ Failed to save chat log to Supabase.")
-
+        supabase.table("chat_logs").insert(payload).execute()
     except Exception as e:
-        print(f"❌ Error while saving chat log: {str(e)}")
+        print(f"❌ Error while saving chat log: {e}")
