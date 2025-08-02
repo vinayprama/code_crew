@@ -113,21 +113,51 @@ async def chat_voice_endpoint(data: ChatQuery):
         user_email = data.email.lower()
         project_name = data.project_name or "Smart Traffic AI"
 
-        # Use preloaded DOCX context
-        context = GLOBAL_DOC_CONTEXT
-        if not context:
-            context = extract_text_from_file(_DOC_PATH)
+        print("🎤 Voice endpoint hit")
+        print(f"📁 Project: {project_name}")
+        print(f"📝 Query: {query}")
 
-        embedding = await run_in_threadpool(embed_text, query)
+        # 🔍 Confusion fallback
+        if len(query) < 500 and CONFUSION_RE.search(query):
+            print("🤔 Confusion detected")
+            return JSONResponse(content={
+                "reply": "🤖 It seems this wasn’t clear. Would you like me to schedule a meeting?"
+            })
+
+        # 📅 Meeting scheduling
+        if len(query) < 100 and YES_RE.match(query):
+            print("✅ User confirmed scheduling")
+            meeting_time = datetime.now() + timedelta(hours=1)
+            payload = {
+                "project_name": project_name,
+                "requested_time": meeting_time.strftime('%Y-%m-%d %H:%M:%S'),
+                "team_member_email": user_email
+            }
+            try:
+                resp = requests.post(f"{API_URL}/api/schedule_meeting", json=payload, timeout=5)
+                resp.raise_for_status()
+                result = resp.json()
+                reply = result.get("message", "Meeting scheduled.")
+                if result.get("join_url"):
+                    reply += f"\nJoin here: {result['join_url']}"
+                return JSONResponse(content={"reply": reply})
+            except requests.RequestException as e:
+                return JSONResponse(content={"reply": f"⚠️ Scheduling error: {str(e)}"})
+
+        # 🧠 Build dynamic context using vector search and Supabase
+        context = await build_context(project_name, query)
+
+        # 🗣️ Generate response
         full_response = "".join(generate_response_stream(context, query))
 
-        # fire-and-forget save
+        # 💾 Save conversation
         asyncio.create_task(save_to_supabase(user_email, project_name, query, full_response))
 
         return JSONResponse(content={"reply": full_response})
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
+    except Exception as e:
+        print(f" Error in /chat/voice: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 from datetime import datetime
 
 async def save_to_supabase(project_name: str, query: str, answer: str):

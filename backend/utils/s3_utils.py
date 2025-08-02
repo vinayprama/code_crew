@@ -10,10 +10,10 @@ def upload_to_s3(file_path: str, s3_key: str) -> bool:
         s3.upload_file(file_path, BUCKET_NAME, s3_key)
         return True
     except NoCredentialsError:
-        print("❌ AWS credentials not found.")
+        print("AWS credentials not found.")
         return False
     except Exception as e:
-        print("❌ S3 Upload error:", e)
+        print("S3 Upload error:", e)
         return False
 
 def check_project_exists_in_s3(folder_prefix: str) -> bool:
@@ -21,5 +21,5 @@ def check_project_exists_in_s3(folder_prefix: str) -> bool:
         result = s3.list_objects_v2(Bucket=BUCKET_NAME, Prefix=folder_prefix + "/")
         return 'Contents' in result
     except Exception as e:
-        print("❌ Error checking S3 folder:", e)
+        print("Error checking S3 folder:", e)
         return False

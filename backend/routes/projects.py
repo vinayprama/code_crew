@@ -73,44 +73,7 @@ def create_project(payload: ProjectCreate, user_id: Optional[str] = None):
         raise HTTPException(status_code=500, detail=f"Supabase API error: {e.message}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-  
-
-# @router.get('/projects/{project_name}')
-# def initialize_chat(project_name: str):
-#     # Step 1: Lookup in Supabase
-#     result = supabase.table('projects').select("*").eq("project_name", project_name).single().execute()
-#     if not result.data:
-#         raise HTTPException(status_code=404, detail="Project not found")
-
-#     # Step 2: Fetch SharePoint documents using Graph API
-#     try:
-#         files = fetch_sharepoint_docs()
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=f"SharePoint fetch failed: {str(e)}")
-
-#     if not files:
-#         raise HTTPException(status_code=500, detail="No files found or downloaded")
-
-#     # Step 3: Extract and embed text
-#     all_texts = []
-#     all_metadata = []
-
-#     for file_path in files:
-#         text = extract_text_from_file(file_path)
-#         all_texts.append(text)
-#         all_metadata.append({
-#             "project_name": project_name,
-#             "file_path": file_path,
-#         })
-
-#     try:
-#         add_doc_to_vector_store(all_texts, all_metadata)
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=f"Embedding failed: {str(e)}")
-
-#     return {"message": f"{len(files)} documents processed and ready for chat."}
-
-
+    
 
 #local dox code
 @router.get('/projects/{project_name}')
@@ -139,62 +102,3 @@ def initialize_chat(project_name: str):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to process file: {str(e)}")
-
-
-#  sharepoint without checking database   
-
-
-# @router.get('/projects/{project_name}')
-# def initialize_chat(project_name: str):
-#     # Step 1: Fetch SharePoint documents using Graph API
-#     try:
-#         files = fetch_sharepoint_docs()
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=f"SharePoint fetch failed: {str(e)}")
-
-#     if not files:
-#         raise HTTPException(status_code=500, detail="No files found or downloaded")
-
-#     # Step 2: Extract and embed text
-#     all_texts = []
-#     all_metadata = []
-
-#     for file_path in files:
-#         text = extract_text_from_file(file_path)
-#         all_texts.append(text)
-#         all_metadata.append({
-#             "project_name": project_name,
-#             "file_path": file_path,
-#         })
-
-#     try:
-#         add_doc_to_vector_store(all_texts, all_metadata)
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=f"Embedding failed: {str(e)}")
-
-#     return {"message": f"{len(files)} documents processed and ready for chat."}
-# @router.post("/upload_doc")
-# async def upload_doc(file: UploadFile = File(...), user_id: str = Form(...)):
-#     try:
-#         contents = await file.read()
-
-#         # Save temporarily
-#         temp_path = f"/tmp/{file.filename}"
-#         with open(temp_path, "wb") as f:
-#             f.write(contents)
-
-#         # Extract text from file
-#         text = extract_text_from_file(temp_path)
-
-#         metadata = {
-#             "project_name": f"upload_{user_id}",  # Use user-specific tag
-#             "file_path": file.filename,
-#         }
-
-#         # Add to Qdrant vector store
-#         add_doc_to_vector_store([text], [metadata])
-
-#         return {"message": f"File {file.filename} processed successfully"}
-
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=str(e))
