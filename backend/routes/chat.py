@@ -23,6 +23,10 @@ class ChatQuery(BaseModel):
     project_name: str
     query: str
 
+class VoiceQuery(BaseModel):
+    project_name: str
+    query: str
+
 @router.post("/chat/stream")
 async def chat_stream(data: ChatQuery):
     project_name = data.project_name or "Smart Traffic AI"
@@ -66,3 +70,14 @@ async def chat_stream(data: ChatQuery):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+@router.post("/chat/voice")
+async def chat_voice(data: VoiceQuery):
+    try:
+        context = await build_context(data.project_name, data.query)
+        full_response = ""
+        for chunk in generate_response_stream(context, data.query):
+            full_response += chunk
+        return {"reply": full_response.strip()}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Voice chat error: {str(e)}")
