@@ -291,7 +291,6 @@ async function getChatHistory(token) {
           body: JSON.stringify({
             query: transcript,
             project_name: currentProjectName || "Smart Traffic AI",
-            user_id: "vinayprama07_gmail.com"
           })
         });
         const data = await res.json();
