@@ -57,6 +57,13 @@ import shutil
 
 router = APIRouter()
 
+# 🔥 NEW ROUTE HERE
+@router.get("/upload/check_project/{project_name}")
+def check_project_exists(project_name: str):
+    s3_folder = f"code_crew/{project_name.strip().replace(' ', '_')}"
+    exists = check_project_exists_in_s3(s3_folder)
+    return JSONResponse(content={"exists": exists})
+
 @router.post("/upload_doc/")
 async def upload_doc(
     file: UploadFile = File(...),
@@ -67,19 +74,16 @@ async def upload_doc(
 
     s3_folder = f"code_crew/{project_name.strip().replace(' ', '_')}"
 
-    # Check if project folder already exists in S3
     if check_project_exists_in_s3(s3_folder):
         return JSONResponse(status_code=200, content={
             "message": f"📁 Project '{project_name}' already exists. Save here?",
             "project_exists": True
         })
 
-    # Save temporarily
     temp_path = f"temp_{uuid4().hex}.docx"
     with open(temp_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # Upload to S3
     try:
         s3_key = f"{s3_folder}/{file.filename}"
         upload_success = upload_to_s3(temp_path, s3_key)
