@@ -141,17 +141,43 @@ async function getChatHistory(token) {
       document.getElementById(sectionId).classList.remove('hidden');
     }
     // Project form submission
+    // document.getElementById('projectForm')?.addEventListener('submit', async e => {
+    //   e.preventDefault();
+    //   const projectName = document.getElementById('projectName').value.trim();
+    //   console.log("Project Name Submitted:", projectName); // Debug
+    //   if (!projectName) {
+    //     alert("Please enter a project name.");
+    //     return;
+    //   }
+    //   currentProjectName = projectName;
+    //   showSection('chat');
+    // });
     document.getElementById('projectForm')?.addEventListener('submit', async e => {
-      e.preventDefault();
-      const projectName = document.getElementById('projectName').value.trim();
-      console.log("Project Name Submitted:", projectName); // Debug
-      if (!projectName) {
-        alert("Please enter a project name.");
-        return;
-      }
-      currentProjectName = projectName;
-      showSection('chat');
-    });
+  e.preventDefault();
+  const projectName = document.getElementById('projectName').value.trim();
+  if (!projectName) {
+    alert("Please enter a project name.");
+    return;
+  }
+
+  try {
+    const checkRes = await fetch(`http://localhost:8001/upload/check_project/${projectName}`);
+    const checkData = await checkRes.json();
+    if (!checkData.exists) {
+      alert("❌ Project not found in S3.");
+      return;
+    }
+
+    currentProjectName = projectName;
+    showSection('chat');
+
+    // Optional: Preload context or ask first question here
+
+  } catch (err) {
+    console.error("Error checking project:", err);
+    alert("❌ Failed to verify project in S3.");
+  }
+});
     // Chat form submission the search and start button in the userdashboard 
     document.getElementById('chatForm')?.addEventListener('submit', async e => {
       e.preventDefault();
