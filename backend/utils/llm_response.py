@@ -1,14 +1,18 @@
-
 import ollama
 
 def generate_response_stream(context: str, query: str):
-    prompt = f"""You are a helpful assistant. Use the context to answer the user's query.
+    prompt = f"""
+You are an AI assistant answering questions based ONLY on the given project document below.
 
-    Context: {context}
+--- PROJECT CONTEXT START ---
+{context}
+--- PROJECT CONTEXT END ---
 
-    Query: {query}
+Now answer the following user question using the above context only. If the answer is not found in the context, say "I couldn't find that in the project document."
 
-    Answer:"""
+User Question: {query}
+Answer:
+"""
 
     response = ollama.chat(
         model="mistral",
@@ -19,4 +23,3 @@ def generate_response_stream(context: str, query: str):
     for chunk in response:
         if 'message' in chunk and 'content' in chunk['message']:
             yield chunk['message']['content']
-
