@@ -27,23 +27,6 @@ async function apiRequest(endpoint, method = "GET", data = null, token = null) {
   return responseData;
 }
 
-// ========== Auth APIs ==========
-
-// Register a user
-async function registerUser(formData) {
-  return await apiRequest("/register", "POST", formData);
-}
-
-// Login
-async function loginUser(formData) {
-  return await apiRequest("/login", "POST", formData);
-}
-
-// Reset Password
-async function resetPassword(data) {
-  return await apiRequest("/reset-password", "POST", data);
-}
-
 // ========== Chat ==========
 
 // Send user message to chatbot
@@ -140,18 +123,6 @@ async function getChatHistory(token) {
       document.getElementById('chat').classList.add('hidden');
       document.getElementById(sectionId).classList.remove('hidden');
     }
-    // Project form submission
-    // document.getElementById('projectForm')?.addEventListener('submit', async e => {
-    //   e.preventDefault();
-    //   const projectName = document.getElementById('projectName').value.trim();
-    //   console.log("Project Name Submitted:", projectName); // Debug
-    //   if (!projectName) {
-    //     alert("Please enter a project name.");
-    //     return;
-    //   }
-    //   currentProjectName = projectName;
-    //   showSection('chat');
-    // });
     document.getElementById('projectForm')?.addEventListener('submit', async e => {
   e.preventDefault();
   const projectName = document.getElementById('projectName').value.trim();
