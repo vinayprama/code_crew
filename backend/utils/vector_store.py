@@ -32,10 +32,20 @@ def add_doc_to_vector_store(text_chunks, metadata_chunks):
 
     qdrant.upsert(collection_name=COLLECTION_NAME, points=points)
     
-def search_similar_chunks(collection_name, query_vector, top_k=5):
+# def search_similar_chunks(collection_name, query_vector, top_k=5):
+#     results = qdrant.search(
+#         collection_name=collection_name,
+#         query_vector=query_vector,
+#         limit=top_k
+#     )
+#     return results
+def search_similar_chunks(document_text: str, query: str, top_k=5):
+    query_vector = embed_text(query)
+
     results = qdrant.search(
-        collection_name=collection_name,
+        collection_name=COLLECTION_NAME,
         query_vector=query_vector,
         limit=top_k
     )
+
     return results
