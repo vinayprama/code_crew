@@ -3,7 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from routes import projects  
 from routes.chat import router as chat_router
 from routes.meetings import router as meetings_router
-from routes.upload_doc import router as upload_doc_router  # ✅ Add this line
+from routes.upload_doc import router as upload_doc_router
+from routes.transcribe_video import router as transcribe_video_router
+from routes.upload_doc import router as upload_video_router  # reused router
 from dotenv import load_dotenv
 import os
 
@@ -30,7 +32,10 @@ app.add_middleware(
 app.include_router(projects.router)
 app.include_router(chat_router)
 app.include_router(meetings_router)
-app.include_router(upload_doc_router)  # ✅ Important
+app.include_router(upload_doc_router)  
+app.include_router(upload_video_router)
+app.include_router(transcribe_video_router)
+
 
 # Load S3 config from .env
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")

@@ -33,3 +33,12 @@ def check_project_exists_in_s3(folder_prefix: str) -> bool:
     except Exception as e:
         print("❌ Error checking S3 folder:", e)
         return False
+    
+def download_from_s3(s3_key: str, local_path: str) -> bool:
+    try:
+        s3.download_file(BUCKET_NAME, s3_key, local_path)
+
+        return True
+    except Exception as e:
+        print(f"❌ Download error: {e}")
+        return False
